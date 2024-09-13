@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">PokemonTest</string>
+
+    <string name="pokemon_image">Imagen pokemon</string>
+    <string name="favorite_desc">Favorito</string>
+    <string name="pokemon_name">Nombre pokemon</string>
+
+    <!-- ImageFragment -->
+    <string name="image_fragment">Imagen</string>
+    <string name="load_image">Cargar Imagen</string>
+    <string name="url_image">URL de la Imagen</string>
+    <string name="name">Luis Omar Montes Aguero</string>
+
+    <!-- ListFragment -->
+    <string name="list_fragment">Lista de Pokemones</string>
+    <string name="internet">No hay datos disponibles. Conéctate a internet.</string>
+
+    <!-- DetailFragment -->
+    <string name="detail_fragment">Detalle del Pokemon</string>
+    <string name="height">Altura:</string>
+    <string name="weight">Peso:</string>
+    <string name="type">Tipo:</string>
+
+</resources>
