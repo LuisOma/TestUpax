@@ -13,7 +13,7 @@ class ImageDialogFragment : DialogFragment() {
     companion object {
         private const val ARG_IMAGE_URL = "image_url"
 
-        fun newInstance(imageUrl: String): ImageDialogFragment {
+        fun newInstance(imageUrl: String?): ImageDialogFragment {
             val fragment = ImageDialogFragment()
             val args = Bundle().apply {
                 putString(ARG_IMAGE_URL, imageUrl)

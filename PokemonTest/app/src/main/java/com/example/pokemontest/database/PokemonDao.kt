@@ -19,4 +19,7 @@ interface PokemonDao {
 
     @Query("UPDATE pokemon SET isFavorite = :isFavorite WHERE id = :pokemonId")
     fun updateFavoriteStatus(pokemonId: Int, isFavorite: Boolean)
+
+    @Query("SELECT * FROM pokemon WHERE isFavorite = 1")
+    fun getFavorites(): List<PokemonEntity>
 }

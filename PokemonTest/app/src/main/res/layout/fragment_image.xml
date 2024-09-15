@@ -13,7 +13,6 @@
             android:layout_height="160dp"
             app:backgroundColor="@color/red"
             app:textColor="@color/white"
-            app:placeholder="@drawable/ic_pokeball"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

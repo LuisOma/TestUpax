@@ -1,7 +1,6 @@
 package com.example.pokemontest.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemontest.R
 import com.example.pokemontest.databinding.FragmentListBinding
 import com.example.pokemontest.repository.PokemonRepository
@@ -19,7 +17,7 @@ import com.example.pokemontest.ui.adapter.PokemonAdapter
 import com.example.pokemontest.ui.viewmodel.PokemonViewModel
 import com.example.pokemontest.ui.viewmodel.PokemonViewModelFactory
 
-class ListFragment : Fragment() {
+class FavoriteListFragment : Fragment() {
 
     private lateinit var binding: FragmentListBinding
     private lateinit var viewModel: PokemonViewModel
@@ -38,7 +36,7 @@ class ListFragment : Fragment() {
         val factory = PokemonViewModelFactory(repository, requireContext())
         viewModel = ViewModelProvider(this, factory)[PokemonViewModel::class.java]
 
-        viewModel.fetchPokemonList(false, true)
+        viewModel.fetchFavoritePokemons()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -50,7 +48,7 @@ class ListFragment : Fragment() {
                 dialogFragment.show(parentFragmentManager, "ImageDialog")
             },
             onItemClick = { pokemon ->
-                val action = ListFragmentDirections.actionListFragmentToDetailFragment(pokemon)
+                val action = FavoriteListFragmentDirections.actionFavoriteListFragmentToDetailFragment(pokemon)
                 findNavController().navigate(action)
             },
             onFavoriteClick = { pokemon ->
@@ -60,37 +58,18 @@ class ListFragment : Fragment() {
 
         binding.recyclerView.adapter = pokemonAdapter
 
-        viewModel.pokemons.observe(viewLifecycleOwner) { pokemonList ->
-            if (pokemonList.isEmpty()) {
+        viewModel.favoritePokemons.observe(viewLifecycleOwner) { favoriteList ->
+            if (favoriteList.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
-                    resources.getString(R.string.internet),
+                    "Sin favoritos",
                     Toast.LENGTH_LONG
                 ).show()
-                hideLoadingAnimation()
-            } else {
-                pokemonAdapter.submitList(pokemonList)
-                hideLoadingAnimation()
             }
+            pokemonAdapter.submitList(favoriteList)
+            hideLoadingAnimation()
         }
 
-        viewModel.pokemonList.observe(viewLifecycleOwner) { updatedPokemonList ->
-            pokemonAdapter.submitList(updatedPokemonList)
-        }
-
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-
-                if (!viewModel.isLoading && totalItemCount <= (lastVisibleItemPosition + 5)) {
-                    viewModel.fetchPokemonList(true, false)
-                }
-            }
-        })
         return binding.root
     }
 

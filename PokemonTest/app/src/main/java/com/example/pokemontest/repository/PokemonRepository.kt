@@ -29,4 +29,15 @@ class PokemonRepository(context: Context) {
 
     suspend fun getAllPokemons() = pokemonDao.getAllPokemons()
 
+    fun updateFavoriteStatus(pokemonId: Int, isFavorite: Boolean) {
+        pokemonDao.updateFavoriteStatus(pokemonId, isFavorite)
+    }
+
+    suspend fun getPokemonById(id: Int): PokemonEntity {
+        return pokemonDao.getPokemonById(id)
+    }
+
+    fun getFavoritePokemons(): List<PokemonEntity> {
+        return pokemonDao.getFavorites()
+    }
 }

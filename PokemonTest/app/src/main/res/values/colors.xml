@@ -10,4 +10,18 @@
 
     <color name="red">#FFCC0B0B</color>
     <color name="yellow">#FFFFEB3B</color>
+    <color name="gray">#FFb6b5b5</color>
+    <color name="light_gray">#f3f2f1</color>
+    <color name="black_60_percent_opacity">#99000000</color>
+    <color name="transparent_toolbar">#00000000</color>
+
+    <color name="water">#FF5090d6</color>
+    <color name="dragon">#FF0b6dc3</color>
+    <color name="electric">#FFf4d23c</color>
+    <color name="fairy">#FFec8fe6</color>
+    <color name="ghost">#FF5269ad</color>
+    <color name="fire">#FFff9d55</color>
+    <color name="ice">#FF73cec0</color>
+    <color name="normal">#FF919aa2</color>
+    <color name="grass">#FF63bc5a</color>
 </resources>

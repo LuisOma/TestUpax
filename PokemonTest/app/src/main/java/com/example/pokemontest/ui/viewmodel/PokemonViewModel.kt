@@ -12,7 +12,9 @@ import com.example.pokemontest.utils.PokemonUtils.typesToJson
 import com.example.pokemontest.network.response.PokemonDetailResponse
 import com.example.pokemontest.network.response.PokemonResponse
 import com.example.pokemontest.repository.PokemonRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,26 +26,27 @@ class PokemonViewModel(
 
     private val _pokemons = MutableLiveData<List<PokemonEntity>>()
     val pokemons: LiveData<List<PokemonEntity>> get() = _pokemons
+
+    private val _pokemonDetail = MutableLiveData<PokemonEntity>()
+    val pokemonDetail: LiveData<PokemonEntity> get() = _pokemonDetail
+
+    private val _pokemonList = MutableLiveData<List<PokemonEntity>>()
+    val pokemonList: LiveData<List<PokemonEntity>> get() = _pokemonList
+
+    private val _favoritePokemons = MutableLiveData<List<PokemonEntity>>()
+    val favoritePokemons: LiveData<List<PokemonEntity>> get() = _favoritePokemons
+
     private var currentPage = 0
     var isLoading = false
 
-    init {
-        fetchPokemonList()
-    }
-
-    private fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return connectivityManager.activeNetworkInfo?.isConnectedOrConnecting == true
-    }
-
-    fun fetchPokemonList() {
+    fun fetchPokemonList(isPagining: Boolean, isFirstTime: Boolean) {
         if (isLoading) {
             return
         }
 
         isLoading = true
         viewModelScope.launch {
-            if (isInternetAvailable(context)) {
+            if (isInternetAvailable(context) && (isPagining || isFirstTime)) {
                 fetchPokemonsFromApi()
             } else {
                 val localPokemons = repository.getAllPokemons()
@@ -80,7 +83,6 @@ class PokemonViewModel(
         })
     }
 
-
     private fun fetchPokemonDetail(pokemonId: Int) {
         repository.getPokemonDetail(pokemonId).enqueue(object : Callback<PokemonDetailResponse> {
             override fun onResponse(call: Call<PokemonDetailResponse>, response: Response<PokemonDetailResponse>) {
@@ -97,13 +99,12 @@ class PokemonViewModel(
                             types = typesJson,
                             isFavorite = false
                         )
-
                         viewModelScope.launch {
                             repository.insertPokemon(pokemon)
                             val updatedList = repository.getAllPokemons()
                             _pokemons.postValue(updatedList)
                         }
-
+                        _pokemonDetail.postValue(pokemon)
                     }
                 } else {
                     Log.e("PokeAPI", "Error fetching pokemon details for ID: $pokemonId")
@@ -115,4 +116,43 @@ class PokemonViewModel(
             }
         })
     }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo?.isConnectedOrConnecting == true
+    }
+
+    fun toggleFavoriteStatus(pokemon: PokemonEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val newFavoriteStatus = !pokemon.isFavorite
+            repository.updateFavoriteStatus(pokemon.id, newFavoriteStatus)
+
+            val updatedPokemon = repository.getPokemonById(pokemon.id)
+            val updatedList = repository.getAllPokemons()
+            withContext(Dispatchers.Main) {
+                _pokemonDetail.postValue(updatedPokemon)
+                _pokemonList.postValue(updatedList)
+                fetchFavoritePokemons()
+            }
+        }
+    }
+
+    fun getPokemonById(pokemonId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val pokemon = repository.getPokemonById(pokemonId)
+            withContext(Dispatchers.Main) {
+                _pokemonDetail.postValue(pokemon)
+            }
+        }
+    }
+
+    fun fetchFavoritePokemons() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val favorites = repository.getFavoritePokemons()
+            withContext(Dispatchers.Main) {
+                _favoritePokemons.postValue(favorites)
+            }
+        }
+    }
+
 }

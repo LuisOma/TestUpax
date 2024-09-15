@@ -17,8 +17,11 @@
 
     <!-- DetailFragment -->
     <string name="detail_fragment">Detalle del Pokemon</string>
-    <string name="height">Altura:</string>
-    <string name="weight">Peso:</string>
+    <string name="height">ALTURA</string>
+    <string name="weight">PESO</string>
     <string name="type">Tipo:</string>
+    <string name="header">Encabezado</string>
 
+    <!-- favoriteFragment -->
+    <string name="favorite_fragment">Lista de Favoritos</string>
 </resources>

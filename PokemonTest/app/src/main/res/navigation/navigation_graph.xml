@@ -26,4 +26,16 @@
         android:name="com.example.pokemontest.ui.fragments.DetailFragment"
         android:label="@string/detail_fragment" />
 
+    <fragment
+        android:id="@+id/nav_favorite"
+        android:name="com.example.pokemontest.ui.fragments.FavoriteListFragment"
+        android:label="@string/favorite_fragment">
+        <action
+            android:id="@+id/action_favoriteListFragment_to_detailFragment"
+            app:destination="@id/detailFragment" >
+            <argument
+                android:name="pokemon"
+                app:argType="com.example.pokemontest.database.PokemonEntity" />
+        </action>
+    </fragment>
 </navigation>

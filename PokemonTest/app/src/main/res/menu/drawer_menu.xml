@@ -1,8 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_list"
+        android:icon="@drawable/ic_user"
         android:title="@string/image_fragment"/>
     <item
         android:id="@+id/nav_image"
+        android:icon="@drawable/ic_pokeball"
         android:title="@string/list_fragment"/>
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorite_fragment"/>
 </menu>
